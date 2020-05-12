@@ -22,7 +22,8 @@ class _ContactPageState extends State<ContactPage> {
   @override
   Widget build(BuildContext context) {
     Contact.contacts.sort(
-      (Contact a, Contact b) => a.name[0].toLowerCase().compareTo(b.name[0].toLowerCase()),
+      (Contact a, Contact b) =>
+          a.name[0].toLowerCase().compareTo(b.name[0].toLowerCase()),
     );
 
     return Scaffold(
@@ -30,8 +31,15 @@ class _ContactPageState extends State<ContactPage> {
         title: Text("Phone Book"),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddContactPage()));
+        onPressed: () async {
+          await Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AddContactPage(),
+            ),
+          );
+
+          setState(() {});
         },
         child: Icon(Icons.add),
       ),
@@ -51,7 +59,8 @@ class _ContactPageState extends State<ContactPage> {
                         ),
                         child: Text(
                           contact.name[0].toUpperCase(),
-                          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                              fontSize: 24, fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(

@@ -34,19 +34,19 @@ class _AddContactFormState extends State<AddContactForm> {
       children: <Widget>[
         Stack(children: [
           Image.asset(
-            _file == null ? "assets/user.png" : _file.path,
+            _file == null ? "lib/assets/user.png" : _file.path,
             fit: BoxFit.cover,
             width: double.infinity,
             height: 250,
           ),
           Positioned(
-            bottom: 8,
+              bottom: 8,
               right: 8,
               child: IconButton(
-            onPressed: getFile,
-            icon: Icon(Icons.camera_alt),
-            color: Colors.white,
-          ))
+                onPressed: getFile,
+                icon: Icon(Icons.camera_alt),
+                color: Colors.blue,
+              ))
         ]),
         Padding(
           padding: EdgeInsets.all(8),
@@ -89,13 +89,16 @@ class _AddContactFormState extends State<AddContactForm> {
                   textColor: Colors.white,
                   child: Text("Submit"),
                   onPressed: () {
-                    if (_formKey.currentState.validate) {
+                    if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
 
-                      Contact.contacts.add(Contact(name: name, phoneNumber: phoneNumber));
+                      Contact.contacts
+                          .add(Contact(name: name, phoneNumber: phoneNumber));
 
                       var snackBar = Scaffold.of(context).showSnackBar(
-                        SnackBar(duration: Duration(milliseconds: 300), content: Text("$name has been saved")),
+                        SnackBar(
+                            duration: Duration(milliseconds: 300),
+                            content: Text("$name has been saved")),
                       );
 
                       snackBar.closed.then((onValue) {

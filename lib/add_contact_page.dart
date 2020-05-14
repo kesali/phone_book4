@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:phone_book4/model/contact.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:phone_book4/database/db_helper.dart';
+import 'package:phone_book4/model/contact.dart';
 
 class AddContactPage extends StatelessWidget {
   @override
@@ -24,6 +25,13 @@ class AddContactForm extends StatefulWidget {
 class _AddContactFormState extends State<AddContactForm> {
   final _formKey = GlobalKey<FormState>();
   File _file;
+  DbHelper _dbHelper;
+
+  @override
+  void initState() {
+    _dbHelper = DbHelper();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +42,7 @@ class _AddContactFormState extends State<AddContactForm> {
       children: <Widget>[
         Stack(children: [
           Image.asset(
-            _file == null ? "lib/assets/user.png" : _file.path,
+            _file == null ? "lib/assets/person.jpg" : _file.path,
             fit: BoxFit.cover,
             width: double.infinity,
             height: 250,
@@ -45,7 +53,7 @@ class _AddContactFormState extends State<AddContactForm> {
               child: IconButton(
                 onPressed: getFile,
                 icon: Icon(Icons.camera_alt),
-                color: Colors.blue,
+                color: Colors.white,
               ))
         ]),
         Padding(
@@ -63,6 +71,7 @@ class _AddContactFormState extends State<AddContactForm> {
                       if (value.isEmpty) {
                         return "Name required";
                       }
+                      return null;
                     },
                     onSaved: (value) {
                       name = value;
@@ -78,6 +87,7 @@ class _AddContactFormState extends State<AddContactForm> {
                       if (value.isEmpty) {
                         return "Phone Number required";
                       }
+                      return null;
                     },
                     onSaved: (value) {
                       phoneNumber = value;
@@ -88,23 +98,23 @@ class _AddContactFormState extends State<AddContactForm> {
                   color: Colors.blue,
                   textColor: Colors.white,
                   child: Text("Submit"),
-                  onPressed: () {
-                    if (_formKey.currentState.validate()) {
+                  onPressed: () async {
+                    if (_formKey.currentState.validate) {
                       _formKey.currentState.save();
 
-                      Contact.contacts
-                          .add(Contact(name: name, phoneNumber: phoneNumber));
+                      var contact = Contact(name: name, phoneNumber: phoneNumber, avatar: _file == null ? "" : _file.path);
+
+                      await _dbHelper.insertContact(contact);
 
                       var snackBar = Scaffold.of(context).showSnackBar(
-                        SnackBar(
-                            duration: Duration(milliseconds: 300),
-                            content: Text("$name has been saved")),
+                        SnackBar(content: Text("$name has been saved")),
                       );
 
                       snackBar.closed.then((onValue) {
                         Navigator.pop(context);
                       });
-                    }
+
+                                        }
                   },
                 ),
               ],

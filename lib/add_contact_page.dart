@@ -42,7 +42,7 @@ class _AddContactFormState extends State<AddContactForm> {
       children: <Widget>[
         Stack(children: [
           Image.asset(
-            _file == null ? "lib/assets/person.jpg" : _file.path,
+            _file == null ? "lib/assets/user.png" : _file.path,
             fit: BoxFit.cover,
             width: double.infinity,
             height: 250,
@@ -99,10 +99,13 @@ class _AddContactFormState extends State<AddContactForm> {
                   textColor: Colors.white,
                   child: Text("Submit"),
                   onPressed: () async {
-                    if (_formKey.currentState.validate) {
+                    if (_formKey.currentState.validate()) {
                       _formKey.currentState.save();
 
-                      var contact = Contact(name: name, phoneNumber: phoneNumber, avatar: _file == null ? "" : _file.path);
+                      var contact = Contact(
+                          name: name,
+                          phoneNumber: phoneNumber,
+                          avatar: _file == null ? "" : _file.path);
 
                       await _dbHelper.insertContact(contact);
 
@@ -113,8 +116,7 @@ class _AddContactFormState extends State<AddContactForm> {
                       snackBar.closed.then((onValue) {
                         Navigator.pop(context);
                       });
-
-                                        }
+                    }
                   },
                 ),
               ],

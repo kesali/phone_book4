@@ -11,12 +11,14 @@ class ContactPage extends StatefulWidget {
   _ContactPageState createState() => _ContactPageState();
 }
 
-class _ContactPageState extends State<ContactPage> { //burada tanımlananlar (class içinde)alttaki her widgetta görülür 
+class _ContactPageState extends State<ContactPage> {
+  //burada tanımlananlar (class içinde)alttaki her widgetta görülür
   List<Contact> contacts;
   DbHelper _dbHelper;
   @override
-  void initState() {//statefull methodu çalıştığında otomatik olarak ilk bunu çağırır
-    _dbHelper=DbHelper();
+  void initState() {
+    //statefull methodu çalıştığında otomatik olarak ilk bunu çağırır
+    _dbHelper = DbHelper();
     //contacts = Contact.contacts;
     super.initState();
   }
@@ -34,23 +36,25 @@ class _ContactPageState extends State<ContactPage> { //burada tanımlananlar (cl
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddContactPage()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddContactPage()));
         },
         child: Icon(Icons.add),
       ),
-      body:
-      FutureBuilder(
+      body: FutureBuilder(
         future: _dbHelper.getContacts(),
         builder: (BuildContext context, AsyncSnapshot<List<Contact>> snapshot) {
-          if(!snapshot.hasData) return CircularProgressIndicator();
-          if(snapshot.data.isEmpty) return Text("Your contact list empty");
+          if (!snapshot.hasData) return CircularProgressIndicator();
+          if (snapshot.data.isEmpty) return Text("Your contact list empty");
           return ListView.builder(
               itemCount: snapshot.data.length,
               itemBuilder: (BuildContext context, int index) {
                 Contact contact = snapshot.data[index];
                 return Dismissible(
                   key: UniqueKey(),
-                  background: Container(color: Colors.red,),
+                  background: Container(
+                    color: Colors.red,
+                  ),
                   onDismissed: (direction) async {
                     _dbHelper.removeContact(contact.id);
 
@@ -71,11 +75,14 @@ class _ContactPageState extends State<ContactPage> { //burada tanımlananlar (cl
                   child: ListTile(
                     leading: CircleAvatar(
                       backgroundImage: AssetImage(
-                        contact.avatar.isEmpty ? "assets/img/person.jpg" : contact.avatar,
+                        contact.avatar.isEmpty
+                            ? "assets/img/user.png"
+                            : contact.avatar,
                       ),
                       child: Text(
                         contact.name[0].toUpperCase(),
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 24, fontWeight: FontWeight.bold),
                       ),
                     ),
                     title: Text(contact.name),
@@ -83,7 +90,8 @@ class _ContactPageState extends State<ContactPage> { //burada tanımlananlar (cl
                   ),
                 );
               });
-        },),
+        },
+      ),
     );
   }
 }
@@ -148,5 +156,3 @@ class ContactPage1 extends StatelessWidget{
   }
 
 }*/
-
-
